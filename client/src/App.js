@@ -21,34 +21,25 @@ const StyledTable = styled(Table)({
   minWidth: 1080,
 });
 
-const customers = [
-  {
-    'id': 1,
-    'image': 'https://placehold.co/64/64/red',
-    'name': '홍길동',
-    'birthday': '961222',
-    'gender': '남자',
-    'job': '대학생'
-  },
-  {
-    'id': 2,
-    'image': 'https://placehold.co/64/64/blue',
-    'name': '이몽룡', // 예시 이름 수정
-    'birthday': '201213',
-    'gender': '남자',
-    'job': '취준생'
-  },
-  {
-    'id': 3,
-    'image': 'https://placehold.co/64/64/black',
-    'name': '이정재',
-    'birthday': '991230',
-    'gender': '남자',
-    'job': '배우'
-  }
-];
+
 
 function App() {
+  state = {
+    customers: ""
+  }
+
+  componentDidMount() {
+    this.callApi()
+      .then(res => this.setState({customers: res}))
+      .catch(err => console.log(err));
+  }
+
+  callApi = async() => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  }
+
   // 2. 함수형 컴포넌트에서는 'this.props'를 삭제합니다.
   // StyledPaper와 StyledTable이 클래스 역할을 대신합니다.
   return (
@@ -65,7 +56,9 @@ function App() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {customers.map(c => (
+          {
+
+          this.state.customers ? this.state.customers.map(c => (
             <Customer 
               key={c.id} 
               id={c.id} 
@@ -75,7 +68,9 @@ function App() {
               gender={c.gender} 
               job={c.job} 
             />
-          ))}
+          )) : ""
+          
+          }
         </TableBody>
       </StyledTable>
     </StyledPaper>
